@@ -154,7 +154,7 @@ class ConsulClientIntegrationTests {
 	@Test
 	void eventListWithWaitTimeAndIndex() {
 
-		mockServerClient.when(request().withMethod("GET").withPath("/v1/events"))
+		mockServerClient.when(request().withMethod("GET").withPath("/v1/event/list"))
 			.respond(response().withStatusCode(200)
 				.withHeaders(new Header("Content-Type", "application/json"))
 				.withBody(json("[\n" + "  {\n" + "    \"ID\": \"5548d61d-9e97-8e0e-e2b3-1f5f0af5b1a2\",\n"
@@ -163,12 +163,12 @@ class ConsulClientIntegrationTests {
 						+ "    \"TagFilter\": \"\",\n" + "    \"Version\": 1,\n" + "    \"LTime\": 19\n" + "  }\n"
 						+ "]\n")));
 
-		ResponseEntity<List<Event>> response = client.eventList(5L, 2);
+		ResponseEntity<List<Event>> response = client.eventList(5L, 2, "deploy", null, null, null, null);
 
-		mockServerClient.verify(
-				request().withMethod("GET")
-					.withPath("/v1/events")
-					.withQueryStringParameters(Parameter.param("wait", "5s"), Parameter.param("index", "2")),
+		mockServerClient.verify(request().withMethod("GET")
+			.withPath("/v1/event/list")
+			.withQueryStringParameters(Parameter.param("name", "deploy"), Parameter.param("wait", "5s"),
+					Parameter.param("index", "2")),
 				VerificationTimes.exactly(1));
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

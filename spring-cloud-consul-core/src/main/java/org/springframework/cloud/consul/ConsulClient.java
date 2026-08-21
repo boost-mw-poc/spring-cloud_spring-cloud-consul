@@ -131,15 +131,24 @@ public interface ConsulClient {
 	@PutExchange(url = "/v1/kv/{context}", contentType = MediaType.TEXT_PLAIN_VALUE)
 	ResponseEntity<Boolean> setKVValue(@PathVariable String context, @RequestBody String value);
 
-	@GetExchange("/v1/events")
-	ResponseEntity<List<Event>> eventList();
+	@GetExchange("/v1/event/list")
+	ResponseEntity<List<Event>> eventList(@RequestParam(name = "name", required = false) String name,
+			@RequestParam(name = "node", required = false) String node,
+			@RequestParam(name = "service", required = false) String service,
+			@RequestParam(name = "tag", required = false) String tag,
+			@RequestHeader(name = ACL_TOKEN_HEADER, required = false) String aclToken);
 
-	@GetExchange("/v1/events")
+	@GetExchange("/v1/event/list")
 	ResponseEntity<List<Event>> eventList(@RequestParam("wait") @WaitTimeFormat Long eventTimeout,
-			@RequestParam("index") long index);
+			@RequestParam("index") long index, @RequestParam(name = "name", required = false) String name,
+			@RequestParam(name = "node", required = false) String node,
+			@RequestParam(name = "service", required = false) String service,
+			@RequestParam(name = "tag", required = false) String tag,
+			@RequestHeader(name = ACL_TOKEN_HEADER, required = false) String aclToken);
 
 	@PostExchange("/v1/event/fire/{name}")
-	ResponseEntity<Event> eventFire(@PathVariable String name, @RequestBody String payload);
+	ResponseEntity<Event> eventFire(@PathVariable String name, @RequestBody String payload,
+			@RequestHeader(name = ACL_TOKEN_HEADER, required = false) String aclToken);
 
 	class QueryParams {
 

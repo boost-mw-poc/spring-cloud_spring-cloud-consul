@@ -68,12 +68,12 @@ public class EventService {
 	}
 
 	public Event fire(String name, String payload) {
-		ResponseEntity<Event> response = this.consul.eventFire(name, payload);
+		ResponseEntity<Event> response = this.consul.eventFire(name, payload, null);
 		return response.getBody();
 	}
 
 	public ResponseEntity<List<Event>> getEventsResponse() {
-		return this.consul.eventList();
+		return this.consul.eventList(null, null, null, null, null);
 	}
 
 	public List<Event> getEvents() {
@@ -98,7 +98,8 @@ public class EventService {
 		if (this.properties != null) {
 			eventTimeout = this.properties.getEventTimeout();
 		}
-		ResponseEntity<List<Event>> watch = this.consul.eventList((long) eventTimeout, index);
+		ResponseEntity<List<Event>> watch = this.consul.eventList((long) eventTimeout, index, null, null, null, null,
+				null);
 		return filterEvents(readEvents(watch), lastIndex);
 	}
 
